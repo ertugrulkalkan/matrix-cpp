@@ -53,6 +53,24 @@ matrix<T>::matrix(matrix<T> &reading)
 }
 
 template <typename T>
+bool matrix<T>::operator==(const matrix<T> &in) const
+{
+  if((this->rowC != in.getRowC()) || (this->colC != in.getColC()))
+    return false;
+
+  for(size_t i = 0; i < this->rowC; i++)
+  {
+    for(size_t j = 0; j < this->colC; j++)
+    {
+      if(this->buffer[i][j] != in[i][j])
+        return false;
+      continue;
+    }
+  }
+  return true;
+}
+
+template <typename T>
 matrix<T>::~matrix()
 {
   for(int i = 0; i < this->rowC; i++)
@@ -61,66 +79,87 @@ matrix<T>::~matrix()
 }
 
 template <typename T>
-bool matrix<T>::operator=(matrix<T> &in)
-{ 
-  
-  /*
-  for(int i = 0; i < this->rowC; i++)
-    free(buffer[i]);
-  free(buffer);
-
-  size_t _rows,_cols;
-
-  _rows = in.getRowC();
-  _cols = in.getColC();
-
-  if(_rows == 0 || _cols == 0)
-    return true;
-
-  this->rowC = _rows;
-  this->colC = _cols;
-
-  buffer = new T*[this->rowC];
-  for(size_t i = 0; i < this->rowC; i++)
-    buffer[i] = new T[this->colC];
-
-  for(size_t i = 0; i < this->rowC; i++)
+bool matrix<T>::operator=(const matrix<T> &in)
+{
+  if((resize(in.rowC, in.colC, false)))
   {
-    for(size_t j = 0; j < this->colC; j++)
+    for(size_t i = 0; i < this->rowC; i++)
     {
-      buffer[i][j] = in[i][j];
+      for(size_t j = 0; j < this->colC; j++){
+        buffer[i][j] = in[i][j];
+      }
     }
+    return false;
   }
   return true;
-  */
 }
 
 template <typename T>
-matrix<T> matrix<T>::operator+(matrix<T> &in)
+matrix<T> matrix<T>::operator+(const matrix<T> &in) const
 {
-  
+  matrix<T> out;
+  if((this->rowC == in.getRowC()) && (this->colC == in.getColC()))
+  {
+    out.resize(this->rowC, this->colC, false);
+    for(size_t i = 0; i < this->rowC; i++)
+    {
+      for(size_t j = 0; j < this->colC; j++){
+        out[i][j] = this->buffer[i][j] + in[i][j];
+      }
+    }
+  }
+  return out;
 }
 
 template <typename T>
-matrix<T> matrix<T>::operator-(matrix<T> &in)
+matrix<T> matrix<T>::operator-(const matrix<T> &in) const
 {
-  
+  matrix<T> out;
+  if((this->rowC == in.getRowC()) && (this->colC == in.getColC()))
+  {
+    out.resize(this->rowC, this->colC, false);
+    for(size_t i = 0; i < this->rowC; i++)
+    {
+      for(size_t j = 0; j < this->colC; j++){
+        out[i][j] = this->buffer[i][j] - in[i][j];
+      }
+    }
+  }
+  return out;
 }
 
 template <typename T>
-matrix<T> matrix<T>::operator*(matrix<T> &in)
+matrix<T> matrix<T>::operator*(const matrix<T> &in) const
 {
+  matrix<T> out;
   
+  if(this->colC != in.getRowC())
+    return out;
+  out.resize(this->rowC, in.getColC(), false);
+  
+  for(size_t i = 0; i < out.getRowC(); i++)
+    {
+        for(size_t j = 0; j < out.getColC(); j++)
+        {
+            out[i][j] = 0;
+            for(size_t k = 0; k < this->colC; k++)
+            {
+                out[i][j] += ((this->buffer[i][k]) * (in[k][j]));
+            }
+        }
+    }
+
+    return out;  
 }
 
 template <typename T>
-size_t matrix<T>::getRowC()
+const size_t matrix<T>::getRowC() const
 {
   return this->rowC;
 }
 
 template <typename T>
-size_t matrix<T>::getColC()
+const size_t matrix<T>::getColC() const
 {
   return this->colC;
 }

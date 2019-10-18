@@ -14,22 +14,23 @@ class matrix
     matrix(matrix<T> &reading);
     virtual ~matrix();
 
-    bool operator=(matrix<T> &in);
-    matrix<T> operator+(matrix<T> &in);
-    matrix<T> operator-(matrix<T> &in);
-    matrix<T> operator*(matrix<T> &in);
+    bool operator==(const matrix<T> &in) const;
+    bool operator=(const matrix<T> &in);
+    matrix<T> operator+(const matrix<T> &in) const;
+    matrix<T> operator-(const matrix<T> &in) const;
+    matrix<T> operator*(const matrix<T> &in) const;
     matrix<T> transpose();
     matrix<T> inverse();
     T det();
     
-    T* operator[](size_t in)
+    T* operator[](size_t in) const
     {
       if(in >= rowC) return NULL;
       return buffer[in];
     }
 
-    size_t getRowC();
-    size_t getColC();
+    const size_t getRowC() const;
+    const size_t getColC() const;
 
-    bool resize(size_t _rows, size_t cols, bool _copy = true);  
+    bool resize(size_t _rows, size_t cols, bool _copy);  
 };
