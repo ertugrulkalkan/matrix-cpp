@@ -8,56 +8,31 @@ matrix<T>::matrix()
 {
   this->rowC = 0;
   this->colC = 0;
-  buffer = NULL;
+  this->buffer = NULL;  
 }
 /***************************************************************************************************/
 template <typename T>
-matrix<T>::matrix(size_t _rows, size_t _cols)
+matrix<T>::matrix(const size_t _rows, const size_t _cols)
 {
-  if(_rows == 0 || _cols == 0)
-    return;
-
-  this->rowC = _rows;
-  this->colC = _cols;
-
-  buffer = new T*[this->rowC];
-  for(size_t i = 0; i < this->rowC; i++)
-    buffer[i] = new T[this->colC];
+  this->rowC = 0;
+  this->colC = 0;
+  this->buffer = NULL;
+  this->resize(_rows, _cols, false);
 }
 /***************************************************************************************************/
 template <typename T>
-matrix<T>::matrix(matrix<T> &reading)
-{
-  size_t _rows,_cols;
-
-  _rows = reading.getRowC();
-  _cols = reading.getColC();
-
-  if(_rows == 0 || _cols == 0)
-    return;
-
-  this->rowC = _rows;
-  this->colC = _cols;
-
-  buffer = new T*[this->rowC];
-  for(size_t i = 0; i < this->rowC; i++)
-    buffer[i] = new T[this->colC];
-
-  for(size_t i = 0; i < this->rowC; i++)
-  {
-    for(size_t j = 0; j < this->colC; j++)
-    {
-      buffer[i][j] = reading[i][j];
-    }
-  }
+matrix<T>::matrix(const matrix<T> &reading)
+{ 
+  this->rowC = 0;
+  this->colC = 0;
+  this->buffer = NULL;
+  (*this) = reading;
 }
 /***************************************************************************************************/
 template <typename T>
 matrix<T>::~matrix()
 {
-  for(int i = 0; i < this->rowC; i++)
-    free(buffer[i]);
-  free(buffer);
+  this->remove();
 }
 /***************************************************************************************************/
 template <typename T>
@@ -72,7 +47,6 @@ bool matrix<T>::operator==(const matrix<T> &in) const
     {
       if(this->buffer[i][j] != in[i][j])
         return false;
-      continue;
     }
   }
   return true;
@@ -81,17 +55,15 @@ bool matrix<T>::operator==(const matrix<T> &in) const
 template <typename T>
 bool matrix<T>::operator=(const matrix<T> &in)
 {
-  if((resize(in.rowC, in.colC, false)))
+  this->resize(in.getRowC(), in.getColC(), false);
+  for(size_t i = 0; i < this->rowC; i++)
   {
-    for(size_t i = 0; i < this->rowC; i++)
+    for(size_t j = 0; j < this->colC; j++)
     {
-      for(size_t j = 0; j < this->colC; j++){
-        buffer[i][j] = in[i][j];
-      }
+      buffer[i][j] = in[i][j];
     }
-    return false;
   }
-  return true;
+  return false;
 }
 /***************************************************************************************************/
 template <typename T>
@@ -103,10 +75,17 @@ matrix<T> matrix<T>::operator+(const matrix<T> &in) const
     out.resize(this->rowC, this->colC, false);
     for(size_t i = 0; i < this->rowC; i++)
     {
-      for(size_t j = 0; j < this->colC; j++){
+      for(size_t j = 0; j < this->colC; j++)
+      {
         out[i][j] = this->buffer[i][j] + in[i][j];
       }
     }
+  }
+  else
+  {
+    cout << "Operator is not available to add different sized matrices ! [function : matrix<T>::operator+(const matrix<T> &)]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
   }
   return out;
 }
@@ -120,10 +99,17 @@ matrix<T> matrix<T>::operator-(const matrix<T> &in) const
     out.resize(this->rowC, this->colC, false);
     for(size_t i = 0; i < this->rowC; i++)
     {
-      for(size_t j = 0; j < this->colC; j++){
+      for(size_t j = 0; j < this->colC; j++)
+      {
         out[i][j] = this->buffer[i][j] - in[i][j];
       }
     }
+  }
+  else
+  {
+    cout << "Operator is not available to subtract different sized matrices ! [function : matrix<T>::operator-(const matrix<T> &)]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
   }
   return out;
 }
@@ -134,9 +120,13 @@ matrix<T> matrix<T>::operator*(const matrix<T> &in) const
   matrix<T> out;
   
   if(this->colC != in.getRowC())
-    return out;
+  {
+    cout << "Operator is not available to multiply these matrices ! [function : matrix<T>::operator*(const matrix<T> &)]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
+  }
+
   out.resize(this->rowC, in.getColC(), false);
-  
   for(size_t i = 0; i < out.getRowC(); i++)
     {
         for(size_t j = 0; j < out.getColC(); j++)
@@ -156,17 +146,15 @@ void matrix<T>::transpose()
 {
   matrix<T> out;
 
-  if(out.resize(this->colC, this->rowC, false))
+  out.resize(this->colC, this->rowC, false);
+  for(size_t i = 0; i < this->rowC; i++)
   {
-    for(size_t i = 0; i < this->rowC; i++)
+    for(size_t j = 0; j < this->colC; j++)
     {
-      for(size_t j = 0; j < this->colC; j++)
-      {
-        out[j][i] = this->buffer[i][j];
-      }
+      out[j][i] = this->buffer[i][j];
     }
   }
-  *this = out;
+  (*this) = out;
 }
 /***************************************************************************************************/
 template <typename T>
@@ -176,42 +164,28 @@ matrix<T> matrix<T>::inverse()
 }
 /***************************************************************************************************/
 template <typename T>
-matrix<T> submatrix(const matrix<T> &mx, size_t row_ignore, size_t col_ignore)
+matrix<T> submatrix(const matrix<T> &in, size_t row_ignore, size_t col_ignore)
 {
-  size_t mx_row = mx.getRowC();
-  size_t mx_col = mx.getColC();
   matrix<T> submx;
 
-  if((row_ignore >= mx_row) || (col_ignore >= mx_col))
+  submx.resize((in.getRowC() - 1), (in.getColC() - 1), false);
+  for(size_t i = 0, ii = 0; i < in.getRowC(); i++)
   {
-    submx = mx;
-  }
-  else
-  {
-    submx.resize((mx_row - 1), (mx_col - 1), false);
-    for(size_t i = 0, ii = 0; i < mx_row; i++)
+    if(i == row_ignore)
+      continue;
+    for(size_t j = 0, jj = 0; j < in.getColC(); j++)
     {
-      if(i == row_ignore)
+      if(j == col_ignore)
       {
         continue;
       }
       else
       {
-        for(size_t j = 0, jj = 0; j < mx_col; j++)
-        {
-          if(j == col_ignore)
-          {
-            continue;
-          }
-          else
-          {
-            submx[ii][jj] = mx[i][j];
-            jj++;
-          }
-        }
-        ii++;
+        submx[ii][jj] = in[i][j];
+        jj++;
       }
     }
+    ii++;
   }
   return submx;
 }
@@ -219,6 +193,12 @@ matrix<T> submatrix(const matrix<T> &mx, size_t row_ignore, size_t col_ignore)
 template <typename T>
 T matrix<T>::det()
 {
+  if(this->rowC != this->colC)
+  {
+    cout << "Not a square matrix ! [function : matrix<T>::det()]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
+  }
   T dt = (T)0;
   if((this->rowC == 2) && (this->colC == 2))
   {
@@ -247,12 +227,15 @@ const size_t matrix<T>::getColC() const
 }
 /***************************************************************************************************/
 template <typename T>
-bool matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)
+void matrix<T>::resize(const size_t _rows, const size_t _cols, bool _copy)
 {
-  if(_rows == 0 || _cols == 0)
-    return false;
-  
-  if(_rows == this->rowC)
+  if((_rows == 0) || (_cols == 0))
+  {
+    /* if any of them equals zero than the total size is zero */
+    this->remove();
+    return;
+  }
+  else if(this->rowC == _rows)
   {
     /* no need to resize buffer */
     if(_cols == this->colC)
@@ -266,7 +249,7 @@ bool matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)
             this->buffer[i][j] = 0;
         }
       }
-      return true;
+      return;
     } 
     else
     {
@@ -282,13 +265,11 @@ bool matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)
         {
           this->buffer[i][j] = temp[j];
         }
-        free(temp);
-        
-        this->colC = _cols;
-        this->rowC = _rows;
-        
-        return true;
+        free(temp);        
       }
+      this->colC = _cols;
+      this->rowC = _rows;
+      return;
     }
   }
   else
@@ -302,24 +283,42 @@ bool matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)
     {
       this->buffer[i] = new T[_cols];
     }
+
     /* if copy resize, copy old content */
     for(size_t i = 0; _copy  && (i < min(_rows, this->rowC)); i++)
     {
-      for(size_t j = 0; j < min(_cols, this->colC); j++){
+      for(size_t j = 0; j < min(_cols, this->colC); j++)
+      {
         this->buffer[i][j] = temp[i][j];
       }
     }
 
+    /* free old buffer */
     for(size_t i = 0; i < this->rowC; i++)
       free(temp[i]);
     free(temp);
 
     this->colC = _cols;
     this->rowC = _rows;
-
-    return true;
+    return;
   }
-  return false;
+  cout << "Couldn't resize the matrix ! [function : matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)]" << endl;
+  cout << "EXIT_FAILURE" << endl;
+  exit(EXIT_FAILURE);
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::remove()
+{
+  if(buffer != NULL){
+    for(size_t i = 0; i < this->rowC; i++)
+      if((this->buffer[i]) != NULL)
+        free(this->buffer[i]);
+    free(this->buffer);
+    this->buffer = NULL;
+  }
+  this->rowC = 0;
+  this->colC = 0;
 }
 /***************************************************************************************************/
 template class matrix<double>;
