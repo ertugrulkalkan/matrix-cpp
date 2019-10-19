@@ -22,7 +22,6 @@ matrix<T>::matrix(size_t _rows, size_t _cols)
   buffer = new T*[this->rowC];
   for(size_t i = 0; i < this->rowC; i++)
     buffer[i] = new T[this->colC];
-
 }
 
 template <typename T>
@@ -53,6 +52,14 @@ matrix<T>::matrix(matrix<T> &reading)
 }
 
 template <typename T>
+matrix<T>::~matrix()
+{
+  for(int i = 0; i < this->rowC; i++)
+    free(buffer[i]);
+  free(buffer);
+}
+
+template <typename T>
 bool matrix<T>::operator==(const matrix<T> &in) const
 {
   if((this->rowC != in.getRowC()) || (this->colC != in.getColC()))
@@ -68,14 +75,6 @@ bool matrix<T>::operator==(const matrix<T> &in) const
     }
   }
   return true;
-}
-
-template <typename T>
-matrix<T>::~matrix()
-{
-  for(int i = 0; i < this->rowC; i++)
-    free(buffer[i]);
-  free(buffer);
 }
 
 template <typename T>
@@ -151,6 +150,73 @@ matrix<T> matrix<T>::operator*(const matrix<T> &in) const
 
     return out;  
 }
+
+template <typename T>
+void matrix<T>::transpose()
+{
+  matrix<T> out;
+
+  if(out.resize(this->colC, this->rowC, false))
+  {
+    for(size_t i = 0; i < this->rowC; i++)
+    {
+      for(size_t j = 0; j < this->colC; j++)
+      {
+        out[j][i] = this->buffer[i][j];
+      }
+    }
+  }
+  *this = out;
+}
+
+template <typename T>
+matrix<T> matrix<T>::inverse()
+{
+
+}
+
+template <typename T>
+matrix<T> matrix<T>::submatrix(const matrix<T> &mx, size_t row_ignore, size_t col_ignore) const
+{
+  size_t mx_row = mx.getRowC();
+  size_t mx_col = mx.getColC();
+  matrix<T> submx;
+  size_t ii = 0, jj = 0;
+
+  if((row_ignore >= mx_row) || (col_ignore >= mx_col))
+  {
+    submx = mx;
+  }
+  else
+  {
+    /* TODO : retype this part */
+    submx.resize((mx_row - 1), (mx_col - 1), false);
+    for(size_t i = 0; i < mx.getRowC(); i++)
+    {
+      if(i != row_ignore){
+        for(size_t j = 0; j < mx.getColC(); j++)
+        {
+          if(j != col_ignore)
+          {
+            submx[ii][jj] = mx[i][j];
+            jj++;
+          }
+          continue;
+        }
+        ii++;
+      }
+      continue;
+    }
+  }
+  return submx;
+}
+
+template <typename T>
+T matrix<T>::det()
+{
+
+}
+
 
 template <typename T>
 const size_t matrix<T>::getRowC() const

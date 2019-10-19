@@ -24,33 +24,24 @@ void print_mat(matrix<double> &tp)
 
 int main()
 {   
-    matrix<int> a(10,10);
-    matrix<int> b(10,10);
-    matrix<int> c(10,10);
+    matrix<int> b(4,3);
 
     /* birim matris */
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 4; i++)
     {
-        for(int j = 0; j < 10; j++)
-            if(i == j) a[i][j] = 1;
+        for(int j = 0; j < 3; j++)
+            b[i][j] = i+j;
     }
 
-    for(int i = 0; i < 10; i++)
-    {
-        for(int j = 0; j < 10; j++)
-            if(i == j) b[i][j] = 1;
-    }
-    
-    c.resize(5, 5, false);
-    
-    c = a + b;
-
-    print_mat(a);
-    print_mat(c);
-    
-    b = a * c;
-    
+    cout << "b" << endl;
+    b.transpose();
     print_mat(b);
 
+    b.transpose();
+    print_mat(b);
+    
+    matrix<int> a = b.submatrix(b,1,1);
+
+    print_mat(a);
     return 0;
 }
