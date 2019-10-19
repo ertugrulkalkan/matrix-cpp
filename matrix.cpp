@@ -1,7 +1,8 @@
 #include "matrix.h"
+#include "math.h"
 #include <iostream>
 using namespace std;
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T>::matrix()
 {
@@ -9,7 +10,7 @@ matrix<T>::matrix()
   this->colC = 0;
   buffer = NULL;
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T>::matrix(size_t _rows, size_t _cols)
 {
@@ -23,7 +24,7 @@ matrix<T>::matrix(size_t _rows, size_t _cols)
   for(size_t i = 0; i < this->rowC; i++)
     buffer[i] = new T[this->colC];
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T>::matrix(matrix<T> &reading)
 {
@@ -50,7 +51,7 @@ matrix<T>::matrix(matrix<T> &reading)
     }
   }
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T>::~matrix()
 {
@@ -58,7 +59,7 @@ matrix<T>::~matrix()
     free(buffer[i]);
   free(buffer);
 }
-
+/***************************************************************************************************/
 template <typename T>
 bool matrix<T>::operator==(const matrix<T> &in) const
 {
@@ -76,7 +77,7 @@ bool matrix<T>::operator==(const matrix<T> &in) const
   }
   return true;
 }
-
+/***************************************************************************************************/
 template <typename T>
 bool matrix<T>::operator=(const matrix<T> &in)
 {
@@ -92,7 +93,7 @@ bool matrix<T>::operator=(const matrix<T> &in)
   }
   return true;
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T> matrix<T>::operator+(const matrix<T> &in) const
 {
@@ -109,7 +110,7 @@ matrix<T> matrix<T>::operator+(const matrix<T> &in) const
   }
   return out;
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T> matrix<T>::operator-(const matrix<T> &in) const
 {
@@ -126,7 +127,7 @@ matrix<T> matrix<T>::operator-(const matrix<T> &in) const
   }
   return out;
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T> matrix<T>::operator*(const matrix<T> &in) const
 {
@@ -147,10 +148,9 @@ matrix<T> matrix<T>::operator*(const matrix<T> &in) const
             }
         }
     }
-
     return out;  
 }
-
+/***************************************************************************************************/
 template <typename T>
 void matrix<T>::transpose()
 {
@@ -168,20 +168,19 @@ void matrix<T>::transpose()
   }
   *this = out;
 }
-
+/***************************************************************************************************/
 template <typename T>
 matrix<T> matrix<T>::inverse()
 {
 
 }
-
+/***************************************************************************************************/
 template <typename T>
-matrix<T> matrix<T>::submatrix(const matrix<T> &mx, size_t row_ignore, size_t col_ignore) const
+matrix<T> submatrix(const matrix<T> &mx, size_t row_ignore, size_t col_ignore)
 {
   size_t mx_row = mx.getRowC();
   size_t mx_col = mx.getColC();
   matrix<T> submx;
-  size_t ii = 0, jj = 0;
 
   if((row_ignore >= mx_row) || (col_ignore >= mx_col))
   {
@@ -189,47 +188,68 @@ matrix<T> matrix<T>::submatrix(const matrix<T> &mx, size_t row_ignore, size_t co
   }
   else
   {
-    /* TODO : retype this part */
     submx.resize((mx_row - 1), (mx_col - 1), false);
-    for(size_t i = 0; i < mx.getRowC(); i++)
+    for(size_t i = 0, ii = 0; i < mx_row; i++)
     {
-      if(i != row_ignore){
-        for(size_t j = 0; j < mx.getColC(); j++)
+      if(i == row_ignore)
+      {
+        continue;
+      }
+      else
+      {
+        for(size_t j = 0, jj = 0; j < mx_col; j++)
         {
-          if(j != col_ignore)
+          if(j == col_ignore)
+          {
+            continue;
+          }
+          else
           {
             submx[ii][jj] = mx[i][j];
             jj++;
           }
-          continue;
         }
         ii++;
       }
-      continue;
     }
   }
   return submx;
 }
-
+/***************************************************************************************************/
 template <typename T>
 T matrix<T>::det()
 {
-
+  T dt = (T)0;
+  if((this->rowC == 2) && (this->colC == 2))
+  {
+    dt = (T)((this->buffer[0][0] * this->buffer[1][1]) - (this->buffer[0][1] * this->buffer[1][0]));
+  }
+  else
+  {
+    for(size_t i = 0; i < this->rowC; i++)
+    {
+      for(size_t j = 0; j < this->colC; j++)
+      {
+        dt += (T)(this->buffer[i][j] * pow(-1,(i + j)) * submatrix((*this), i, j).det());
+      }
+    }
+    dt /= (T)(this->rowC);
+  }
+  return dt;
 }
-
-
+/***************************************************************************************************/
 template <typename T>
 const size_t matrix<T>::getRowC() const
 {
   return this->rowC;
 }
-
+/***************************************************************************************************/
 template <typename T>
 const size_t matrix<T>::getColC() const
 {
   return this->colC;
 }
-
+/***************************************************************************************************/
 template <typename T>
 bool matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)
 {
@@ -305,7 +325,7 @@ bool matrix<T>::resize(size_t _rows, size_t _cols, bool _copy)
   }
   return false;
 }
-
+/***************************************************************************************************/
 template class matrix<double>;
 template class matrix<float>;
 template class matrix<int>;

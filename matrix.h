@@ -14,9 +14,6 @@ class matrix
     matrix(matrix<T> &reading);
     virtual ~matrix();
 
-    matrix<T> submatrix(const matrix<T> &mx, size_t i_ignore, size_t j_ignore) const;
-
-
     bool operator==(const matrix<T> &in) const;
     bool operator=(const matrix<T> &in);
     matrix<T> operator+(const matrix<T> &in) const;
