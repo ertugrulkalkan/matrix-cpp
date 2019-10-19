@@ -226,14 +226,10 @@ T matrix<T>::det()
   }
   else
   {
-    for(size_t i = 0; i < this->rowC; i++)
+    for(size_t j = 0; j < this->colC; j++)
     {
-      for(size_t j = 0; j < this->colC; j++)
-      {
-        dt += (T)(this->buffer[i][j] * pow(-1,(i + j)) * submatrix((*this), i, j).det());
-      }
+      dt += (T)(this->buffer[0][j] * pow(-1,(0 + j)) * submatrix((*this), 0, j).det());
     }
-    dt /= (T)(this->rowC);
   }
   return dt;
 }
