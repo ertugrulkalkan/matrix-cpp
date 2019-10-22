@@ -19,48 +19,87 @@ class matrix
      * Else returns 'false'.
      */
     bool operator==(const matrix<T> &in) const;
+
     /*
      * Copy 'in' matrix to '(*this)'.
      * If successful, returns 'false'.
      */
     bool operator=(const matrix<T> &in);
+
     /*
      * Add 'AxB' sized '(*this)' matrix by 'AxB' sized 'in' matrix.
      * If successful, returns 'AxB' sized matrix,
      * Else exits
      */
     matrix<T> operator+(const matrix<T> &in) const;
+    void operator+=(const matrix<T> &in);
+    matrix<T> operator+(const double &in);
+
     /*
      * Subtract 'AxB' sized '(*this)' matrix by 'AxB' sized 'in' matrix.
      * If successful, returns 'AxB' sized matrix,
      * Else exits.
      */
     matrix<T> operator-(const matrix<T> &in) const;
+    void operator-=(const matrix<T> &in);
+    matrix<T> operator-(const double &in);
+
+
+
     /*
      * Multiply 'AxB' sized '(*this)' matrix by 'BxC' sized 'in' matrix.
      * If successful, returns 'AxC' sized matrix,
      * Else exits.
      */
     matrix<T> operator*(const matrix<T> &in) const;
+    void operator*=(const matrix<T> &in);
+    matrix<T> operator*(const double &in);
+
+
     /*
      * Transpose the matrix.
      * 'AxB' matrix to 'BxA'
      */
     void transpose();
+
+    /*
+     * Returns the transpose of matrix.
+     * 'AxB' matrix to 'BxA'
+     */
+    matrix<T> getTranspose() const;
+
     /*
      * Calculate inverse of matrix if posiable.
      * '(*this)' matrix must be a square matrix.
      * '(*this)->det()' must be a non zero value.
      */
-    matrix<T> inverse();
+    void inverse();
+
+    /*
+     * Returns inverse of matrix if posiable.
+     * '(*this)' matrix must be a square matrix.
+     * '(*this)->det()' must be a non zero value.
+     */
+    matrix<T> getInverse() const;
+
+    /*
+     *
+     */
+    void cofactor();
+
+    /*
+     *
+     */
+    matrix<T> getCofactor() const;
+    
     /*
      * Calculates determinant of matrix if posiable.
      * '(*this)' matrix must be a square matrix.
      * If successful, returns determinant value,
      * Else exits.
      */
-    T det();
-    
+    T det() const;
+
     /*
      * Index buffer.
      */
@@ -74,10 +113,16 @@ class matrix
      * Returns count of rows in matrix.
      */
     const size_t getRowC() const;
+
     /*
      * Returns count of columns in matrix.
      */
     const size_t getColC() const;
+
+    /*
+     * Returns 'true' if matrix is a square matrix.
+     */
+    const bool isSquare() const;
 
     /*
      * Resize the matrix.
@@ -87,6 +132,7 @@ class matrix
      * If '_copy' is given 'false', new values in matrix are all will be zero.
      */
     void resize(const size_t _rows, const size_t cols, bool _copy);
+
     /*
      * Clear all content of class.
      * Calling this will release all memory used by this class.

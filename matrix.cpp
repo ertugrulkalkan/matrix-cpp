@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 /***************************************************************************************************/
+template <typename T> matrix<T> submatrix(const matrix<T> &in, size_t row_ignore, size_t col_ignore);
+/***************************************************************************************************/
 template <typename T>
 matrix<T>::matrix()
 {
@@ -91,6 +93,13 @@ matrix<T> matrix<T>::operator+(const matrix<T> &in) const
 }
 /***************************************************************************************************/
 template <typename T>
+void matrix<T>::operator+=(const matrix<T> &in)
+{
+  (*this) = (*this) + in;
+  return;
+}
+/***************************************************************************************************/
+template <typename T>
 matrix<T> matrix<T>::operator-(const matrix<T> &in) const
 {
   matrix<T> out;
@@ -112,6 +121,13 @@ matrix<T> matrix<T>::operator-(const matrix<T> &in) const
     exit(EXIT_FAILURE);
   }
   return out;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator-=(const matrix<T> &in)
+{
+  (*this) = (*this) - in;
+  return;
 }
 /***************************************************************************************************/
 template <typename T>
@@ -142,7 +158,20 @@ matrix<T> matrix<T>::operator*(const matrix<T> &in) const
 }
 /***************************************************************************************************/
 template <typename T>
+void matrix<T>::operator*=(const matrix<T> &in)
+{
+  (*this) = (*this) * in;
+  return;
+}
+/***************************************************************************************************/
+template <typename T>
 void matrix<T>::transpose()
+{
+  (*this) = this->getTranspose();
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::getTranspose() const
 {
   matrix<T> out;
 
@@ -154,13 +183,50 @@ void matrix<T>::transpose()
       out[j][i] = this->buffer[i][j];
     }
   }
-  (*this) = out;
+  return out;
 }
 /***************************************************************************************************/
 template <typename T>
-matrix<T> matrix<T>::inverse()
+void matrix<T>::inverse()
 {
+  (*this) = this->getInverse();
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::getInverse() const
+{
+  if((this->det()) == 0)
+  {
+    cout << "Matrix is not invertable (det() equals zero) ! [function : matrix<T>::getInverse()]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
+  }
+  matrix<T> out;
+  out = this->getCofactor().getTranspose();
+  out *= 1.0 / (double)this->det();
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::cofactor()
+{
+  (*this) = this->getCofactor();
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::getCofactor() const
+{
+  matrix<T> out;
+  out = (*this);
+  for(size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = submatrix((*this), i, j).det();
+    }
+  }
 
+  return out;
 }
 /***************************************************************************************************/
 template <typename T>
@@ -191,9 +257,9 @@ matrix<T> submatrix(const matrix<T> &in, size_t row_ignore, size_t col_ignore)
 }
 /***************************************************************************************************/
 template <typename T>
-T matrix<T>::det()
+T matrix<T>::det() const
 {
-  if(this->rowC != this->colC)
+  if(!(this->isSquare()))
   {
     cout << "Not a square matrix ! [function : matrix<T>::det()]" << endl;
     cout << "EXIT_FAILURE" << endl;
@@ -227,11 +293,18 @@ const size_t matrix<T>::getColC() const
 }
 /***************************************************************************************************/
 template <typename T>
+const bool matrix<T>::isSquare() const
+{
+  return (this->rowC == this->colC) & (this->rowC != 0);
+}
+/***************************************************************************************************/
+template <typename T>
 void matrix<T>::resize(const size_t _rows, const size_t _cols, bool _copy)
 {
-  if((_rows == 0) || (_cols == 0))
+  if((_rows == 1) && (_cols == 1) || (_rows == 0) || (_cols == 0))
   {
-    /* if any of them equals zero than the total size is zero */
+    /* cannot resize a matrix as 1x1 */
+                                /* if any of them equals zero than the total size is zero */
     this->remove();
     return;
   }

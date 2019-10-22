@@ -26,7 +26,7 @@ void print_mat(matrix<double> &tp)
 
 int main()
 {   
-  matrix<double> b(3,4);
+  matrix<double> b(4,4);
   
   b[0][0] = 5.2;
   b[0][1] = 4.5;
@@ -43,13 +43,21 @@ int main()
   b[2][2] = 22;
   b[2][3] = -20;
 
+  b[3][0] = 0;
+  b[3][1] = 0;
+  b[3][2] = 0;
+  b[3][3] = 0;
+
   matrix<double> c(b);
   matrix<double> a(b);
   
-  a.transpose();
+  print_mat(a);
+  //a.cofactor();
+  b = a.getCofactor();
+  print_mat(b);
+  a.cofactor();
+  print_mat(a);
   
-  c = (a * b);
-  cout<< (c.det()) << endl;
 
   return 0;
 }
