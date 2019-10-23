@@ -33,7 +33,9 @@ class matrix
      */
     matrix<T> operator+(const matrix<T> &in) const;
     void operator+=(const matrix<T> &in);
-    matrix<T> operator+(const double &in);
+    matrix<T> operator+(const double &in) const;
+    matrix<T> operator+(const float &in) const;
+    matrix<T> operator+(const int &in) const;
 
     /*
      * Subtract 'AxB' sized '(*this)' matrix by 'AxB' sized 'in' matrix.
@@ -42,7 +44,9 @@ class matrix
      */
     matrix<T> operator-(const matrix<T> &in) const;
     void operator-=(const matrix<T> &in);
-    matrix<T> operator-(const double &in);
+    matrix<T> operator-(const double &in) const;
+    matrix<T> operator-(const float &in) const;
+    matrix<T> operator-(const int &in) const;
 
 
 
@@ -53,7 +57,17 @@ class matrix
      */
     matrix<T> operator*(const matrix<T> &in) const;
     void operator*=(const matrix<T> &in);
-    matrix<T> operator*(const double &in);
+    matrix<T> operator*(const double &in) const;
+    matrix<T> operator*(const float &in) const;
+    matrix<T> operator*(const int &in) const;
+
+    void operator/=(const double &in);
+    void operator/=(const float &in);
+    void operator/=(const int &in);
+    matrix<T> operator/(const double &in);
+    matrix<T> operator/(const float &in);
+    matrix<T> operator/(const int &in);
+
 
 
     /*

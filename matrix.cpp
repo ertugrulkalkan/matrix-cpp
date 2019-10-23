@@ -100,6 +100,51 @@ void matrix<T>::operator+=(const matrix<T> &in)
 }
 /***************************************************************************************************/
 template <typename T>
+matrix<T> matrix<T>::operator+(const double &in) const
+{
+  matrix<T> out;
+
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] + in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator+(const float &in) const
+{
+  matrix<T> out;
+
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] + in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator+(const int &in) const
+{
+  matrix<T> out;
+
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] + in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
 matrix<T> matrix<T>::operator-(const matrix<T> &in) const
 {
   matrix<T> out;
@@ -128,6 +173,51 @@ void matrix<T>::operator-=(const matrix<T> &in)
 {
   (*this) = (*this) - in;
   return;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator-(const double &in) const
+{
+  matrix<T> out;
+
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] - in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator-(const float &in) const
+{
+  matrix<T> out;
+
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] - in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator-(const int &in) const
+{
+  matrix<T> out;
+
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] - in;
+    }
+  }
+  return out;
 }
 /***************************************************************************************************/
 template <typename T>
@@ -162,6 +252,54 @@ void matrix<T>::operator*=(const matrix<T> &in)
 {
   (*this) = (*this) * in;
   return;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator*(const double &in) const
+{
+  matrix<T> out;
+
+  out.resize(this->rowC, this->colC, false);
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] * in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator*(const float &in) const
+{
+  matrix<T> out;
+
+  out.resize(this->rowC, this->colC, false);
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] * in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator*(const int &in) const
+{
+  matrix<T> out;
+
+  out.resize(this->rowC, this->colC, false);
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] * in;
+    }
+  }
+  return out;
 }
 /***************************************************************************************************/
 template <typename T>
@@ -202,8 +340,10 @@ matrix<T> matrix<T>::getInverse() const
     exit(EXIT_FAILURE);
   }
   matrix<T> out;
-  out = this->getCofactor().getTranspose();
-  out *= 1.0 / (double)this->det();
+  out = this->getCofactor();
+  out.transpose();
+  double a = (double)this->det();
+  out = out * (1.0 / a);
   return out;
 }
 /***************************************************************************************************/
