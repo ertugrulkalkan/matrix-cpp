@@ -46,8 +46,16 @@ int main()
   print_mat(a);
   //a.cofactor();
   b = a.getInverse();
-  print_mat(b);;
+  print_mat(b);
 
+  b *= 23.2;
+  print_mat(b);
+
+  b += 1.5;
+  print_mat(b);
+
+  b -= 1.5;
+  print_mat(b);
 
   return 0;
 }

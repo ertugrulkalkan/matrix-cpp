@@ -104,6 +104,7 @@ matrix<T> matrix<T>::operator+(const double &in) const
 {
   matrix<T> out;
 
+  out.resize(this->rowC, this->colC, false);
   for (size_t i = 0; i < this->rowC; i++)
   {
     for (size_t j = 0; j < this->colC; j++)
@@ -119,6 +120,7 @@ matrix<T> matrix<T>::operator+(const float &in) const
 {
   matrix<T> out;
 
+  out.resize(this->rowC, this->colC, false);
   for (size_t i = 0; i < this->rowC; i++)
   {
     for (size_t j = 0; j < this->colC; j++)
@@ -133,7 +135,8 @@ template <typename T>
 matrix<T> matrix<T>::operator+(const int &in) const
 {
   matrix<T> out;
-
+  
+  out.resize(this->rowC, this->colC, false);
   for (size_t i = 0; i < this->rowC; i++)
   {
     for (size_t j = 0; j < this->colC; j++)
@@ -148,6 +151,7 @@ template <typename T>
 matrix<T> matrix<T>::operator-(const matrix<T> &in) const
 {
   matrix<T> out;
+
   if((this->rowC == in.getRowC()) && (this->colC == in.getColC()))
   {
     out.resize(this->rowC, this->colC, false);
@@ -180,6 +184,7 @@ matrix<T> matrix<T>::operator-(const double &in) const
 {
   matrix<T> out;
 
+  out.resize(this->rowC, this->colC, false);
   for (size_t i = 0; i < this->rowC; i++)
   {
     for (size_t j = 0; j < this->colC; j++)
@@ -195,6 +200,7 @@ matrix<T> matrix<T>::operator-(const float &in) const
 {
   matrix<T> out;
 
+  out.resize(this->rowC, this->colC, false);
   for (size_t i = 0; i < this->rowC; i++)
   {
     for (size_t j = 0; j < this->colC; j++)
@@ -210,6 +216,7 @@ matrix<T> matrix<T>::operator-(const int &in) const
 {
   matrix<T> out;
 
+  out.resize(this->rowC, this->colC, false);
   for (size_t i = 0; i < this->rowC; i++)
   {
     for (size_t j = 0; j < this->colC; j++)
@@ -300,6 +307,147 @@ matrix<T> matrix<T>::operator*(const int &in) const
     }
   }
   return out;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator/=(const double &in)
+{
+  (*this) = (*this) / in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator/=(const float &in)
+{
+  (*this) = (*this) / in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator/=(const int &in)
+{
+  (*this) = (*this) / in;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator/(const double &in) const
+{
+  if(in == 0)
+  {
+    cout << "Division by zero ! [function : matrix<T>::operator/(const double &)]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  matrix<T> out;
+
+  out.resize(this->rowC, this->colC, false);
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] / in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator/(const float &in) const
+{
+  if(in == 0)
+  {
+    cout << "Division by zero ! [function : matrix<T>::operator/(const double &)]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  matrix<T> out;
+
+  out.resize(this->rowC, this->colC, false);
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] / in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+matrix<T> matrix<T>::operator/(const int &in) const
+{
+  if(in == 0)
+  {
+    cout << "Division by zero ! [function : matrix<T>::operator/(const double &)]" << endl;
+    cout << "EXIT_FAILURE" << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  matrix<T> out;
+
+  out.resize(this->rowC, this->colC, false);
+  for (size_t i = 0; i < this->rowC; i++)
+  {
+    for (size_t j = 0; j < this->colC; j++)
+    {
+      out[i][j] = this->buffer[i][j] / in;
+    }
+  }
+  return out;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator*=(const double &in)
+{
+  (*this) = (*this) * in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator*=(const float &in)
+{
+  (*this) = (*this) * in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator*=(const int &in)
+{
+  (*this) = (*this) * in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator+=(const double &in)
+{
+  (*this) = (*this) + in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator+=(const float &in)
+{
+  (*this) = (*this) + in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator+=(const int &in)
+{
+  (*this) = (*this) + in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator-=(const double &in)
+{
+  (*this) = (*this) - in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator-=(const float &in)
+{
+  (*this) = (*this) - in;
+}
+/***************************************************************************************************/
+template <typename T>
+void matrix<T>::operator-=(const int &in)
+{
+  (*this) = (*this) - in;
 }
 /***************************************************************************************************/
 template <typename T>

@@ -64,12 +64,23 @@ class matrix
     void operator/=(const double &in);
     void operator/=(const float &in);
     void operator/=(const int &in);
-    matrix<T> operator/(const double &in);
-    matrix<T> operator/(const float &in);
-    matrix<T> operator/(const int &in);
+    
+    matrix<T> operator/(const double &in) const;
+    matrix<T> operator/(const float &in) const;
+    matrix<T> operator/(const int &in) const;
 
-
-
+    void operator*=(const double &in);
+    void operator*=(const float &in);
+    void operator*=(const int &in);
+    
+    void operator+=(const double &in);
+    void operator+=(const float &in);
+    void operator+=(const int &in);
+    
+    void operator-=(const double &in);
+    void operator-=(const float &in);
+    void operator-=(const int &in);
+    
     /*
      * Transpose the matrix.
      * 'AxB' matrix to 'BxA'
