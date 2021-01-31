@@ -26,30 +26,36 @@ void print_mat(matrix<double> &tp)
 
 int main()
 {   
-  matrix<double> b(3,4);
+  matrix<double> b(3,3);
   
-  b[0][0] = 5.2;
-  b[0][1] = 4.5;
-  b[0][2] = 70.55;
-  b[0][3] = 90.0;
+  b[0][0] = 1;
+  b[0][1] = 0;
+  b[0][2] = 0;
 
-  b[1][0] = 120;
-  b[1][1] = -50;
-  b[1][2] = 40;
-  b[1][3] = -14;
+  b[1][0] = 0;
+  b[1][1] = -3;
+  b[1][2] = 0;
 
-  b[2][0] = -4;
-  b[2][1] = 3;
-  b[2][2] = 22;
-  b[2][3] = -20;
+  b[2][0] = 0;
+  b[2][1] = 0;
+  b[2][2] = -2;
 
   matrix<double> c(b);
   matrix<double> a(b);
   
-  a.transpose();
-  
-  c = (a * b);
-  cout<< (c.det()) << endl;
+  print_mat(a);
+  //a.cofactor();
+  b = a.getInverse();
+  print_mat(b);
+
+  b *= 23.2;
+  print_mat(b);
+
+  b += 1.5;
+  print_mat(b);
+
+  b -= 1.5;
+  print_mat(b);
 
   return 0;
 }
