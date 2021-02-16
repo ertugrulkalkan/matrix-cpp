@@ -1,5 +1,6 @@
 #include <iostream>
-#include "../matrix.h"
+#include "matrix.h"
+
 using namespace std;
 
 void print_mat(matrix<int> &tp)
